@@ -30,7 +30,7 @@ namespace ProjecyTest
 
             XMLFileModel model = new XMLFileModel();
             List<XMLFileModel> models = new List<XMLFileModel>();
-            
+
             foreach (string xmlFile in xmlFiles)
             {
                 string path = xmlFile;
@@ -39,12 +39,10 @@ namespace ProjecyTest
 
                 XmlNode xmlNode;
 
-               
-
                 if (xDoc.FirstChild.NodeType == XmlNodeType.XmlDeclaration)
                 {
                     xmlNode = xDoc.LastChild;
-                 
+
                 }
                 else
                 {
@@ -55,12 +53,12 @@ namespace ProjecyTest
                 {
                     //try
                     //{
-                      
-                        FileParserService(xmlNode, model, models);
-                        
-                        //Thread.Sleep(1000);
-                        Console.WriteLine();
-                        Console.WriteLine();
+
+                    FileParserService(xmlNode, model, models);
+                   
+                    //Thread.Sleep(1000);
+                    Console.WriteLine();
+                    Console.WriteLine();
                     //}
                     //catch
                     //{
@@ -70,16 +68,13 @@ namespace ProjecyTest
             }
         }
         public static void FileParserService(XmlNode xmlNode, XMLFileModel xMLFileModel, List<XMLFileModel> xMLFileModels)
-        {        
+        {
             if (xmlNode.HasChildNodes)
-            {               
+            {
                 if (xmlNode.NodeType == XmlNodeType.Element)
                 {
                     Console.WriteLine();
                     Console.WriteLine($"Имя узла {xmlNode.Name}");
-
-               
-                    xMLFileModels.Add(xMLFileModel);
 
                     if (xmlNode.Attributes.Count != 0)
                     {
@@ -87,16 +82,16 @@ namespace ProjecyTest
                         foreach (XmlAttribute attr in xmlNode.Attributes)
                         {
                             Console.WriteLine($"Имя атребута: {attr.Name} - значение: {attr.Value}");
-                          
+
                         }
                     }
-                  
+
                     if (xmlNode.HasChildNodes)
                     {
                         foreach (XmlNode item in xmlNode.ChildNodes)
                         {
-                                                 
-                             FileParserService(item, xMLFileModel, xMLFileModels);
+
+                            FileParserService(item, xMLFileModel, xMLFileModels);
                         }
                     }
                 }
@@ -109,9 +104,15 @@ namespace ProjecyTest
                     {
                         Console.WriteLine($"Текстовое значение узла:{xmlNode.InnerText}");
 
-                        XMLFileModel xMLFileModel1 = new XMLFileModel(xmlNode.Value, xmlNode.NodeType.ToString());
-                       
-                        xMLFileModels.Add (xMLFileModel1);
+                        XMLFileModel xMLFileModel1 = new XMLFileModel();
+                        if (xmlNode.ParentNode.Name != null || xmlNode.Value != null)
+                        {
+                            xMLFileModel1.ElementTagName = xmlNode.ParentNode.Name;
+                            xMLFileModel1.ElementValue = xmlNode.Value;
+                        }
+                        
+
+                        xMLFileModels.Add(xMLFileModel1);
                     }
                     else
                     {
@@ -123,12 +124,12 @@ namespace ProjecyTest
 
                         foreach (XmlNode item in xmlDocument.DocumentElement)
                         {
-     
-                            xMLFileModels.Add(xMLFileModel);
+
+                         
 
                             FileParserService(item, xMLFileModel, xMLFileModels);
-                     
-                           
+
+
                         }
                         Console.WriteLine();
                     }

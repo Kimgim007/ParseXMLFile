@@ -11,17 +11,14 @@ namespace ProjecyTest
     {
         public XMLFileModel() { }
 
-        public XMLFileModel(string ElementName, string ElementType)
+        public XMLFileModel(string ElementTagName, string ElementValue)
         {
-            this.ElementName = ElementName;
-            this.ElementType = ElementType;
-         
+            this.ElementTagName = ElementTagName;
+            this.ElementValue = ElementValue;
         }
-    
-        public string? ElementName { get; set; }
-        public string? ElementType { get; set; }
-        public string? ElementText { get; set; }
-
+        public string? ElementTagName { get; set; }
+        public string? ElementValue { get; set; }
+        
         //public Dictionary<string, string> Attributes { get; set; } = new Dictionary<string, string>();
         //public Dictionary<string, string> ElementsType { get; set; } = new Dictionary<string, string>();
 
