@@ -24,11 +24,13 @@ namespace ProjecyTest
         {
             Console.WriteLine("Укажите путь к папке где лежат XML файлы для последующей их обработки");
             string pathInFolder = Console.ReadLine();
-
+            //E:\Тестовое задание перезборка\Не брак
             string[] xmlFiles = Directory.GetFiles(pathInFolder, "*.xml");
-
             XmlDocument xDoc = new XmlDocument();
-      
+
+            XMLFileModel model = new XMLFileModel();
+            List<XMLFileModel> models = new List<XMLFileModel>();
+            
             foreach (string xmlFile in xmlFiles)
             {
                 string path = xmlFile;
@@ -37,9 +39,12 @@ namespace ProjecyTest
 
                 XmlNode xmlNode;
 
+               
+
                 if (xDoc.FirstChild.NodeType == XmlNodeType.XmlDeclaration)
                 {
                     xmlNode = xDoc.LastChild;
+                 
                 }
                 else
                 {
@@ -48,35 +53,41 @@ namespace ProjecyTest
 
                 if (xmlNode != null)
                 {
-                    try
-                    {
-                        FileParserService(xmlNode);
-
+                    //try
+                    //{
+                      
+                        FileParserService(xmlNode, model, models);
+                        
+                        //Thread.Sleep(1000);
                         Console.WriteLine();
                         Console.WriteLine();
-                    }
-                    catch
-                    {
-                        Console.WriteLine("Неверный формат файла!!!");
-                    }
+                    //}
+                    //catch
+                    //{
+                    //    Console.WriteLine("Неверный формат файла!!!");
+                    //}
                 }
             }
         }
-        public static async Task FileParserService(XmlNode xmlNode)
+        public static void FileParserService(XmlNode xmlNode, XMLFileModel xMLFileModel, List<XMLFileModel> xMLFileModels)
         {        
             if (xmlNode.HasChildNodes)
-            {
+            {               
                 if (xmlNode.NodeType == XmlNodeType.Element)
                 {
                     Console.WriteLine();
                     Console.WriteLine($"Имя узла {xmlNode.Name}");
-                    
+
+               
+                    xMLFileModels.Add(xMLFileModel);
+
                     if (xmlNode.Attributes.Count != 0)
                     {
                         Console.WriteLine("Атребуты узла:");
                         foreach (XmlAttribute attr in xmlNode.Attributes)
                         {
                             Console.WriteLine($"Имя атребута: {attr.Name} - значение: {attr.Value}");
+                          
                         }
                     }
                   
@@ -84,7 +95,8 @@ namespace ProjecyTest
                     {
                         foreach (XmlNode item in xmlNode.ChildNodes)
                         {
-                            await FileParserService(item);
+                                                 
+                             FileParserService(item, xMLFileModel, xMLFileModels);
                         }
                     }
                 }
@@ -96,6 +108,10 @@ namespace ProjecyTest
                     if ((xmlNode.InnerText[0] != '<') && (xmlNode.InnerText[0] != '>'))
                     {
                         Console.WriteLine($"Текстовое значение узла:{xmlNode.InnerText}");
+
+                        XMLFileModel xMLFileModel1 = new XMLFileModel(xmlNode.Value, xmlNode.NodeType.ToString());
+                       
+                        xMLFileModels.Add (xMLFileModel1);
                     }
                     else
                     {
@@ -107,7 +123,12 @@ namespace ProjecyTest
 
                         foreach (XmlNode item in xmlDocument.DocumentElement)
                         {
-                            await FileParserService(item);
+     
+                            xMLFileModels.Add(xMLFileModel);
+
+                            FileParserService(item, xMLFileModel, xMLFileModels);
+                     
+                           
                         }
                         Console.WriteLine();
                     }
