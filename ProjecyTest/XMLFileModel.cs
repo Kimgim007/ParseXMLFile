@@ -16,11 +16,14 @@ namespace ProjecyTest
             this.ElementTagName = ElementTagName;
             this.ElementValue = ElementValue;
         }
+
+        [XmlElement]
         public string? ElementTagName { get; set; }
+        [XmlText]
         public string? ElementValue { get; set; }
-        
-        //public Dictionary<string, string> Attributes { get; set; } = new Dictionary<string, string>();
-        //public Dictionary<string, string> ElementsType { get; set; } = new Dictionary<string, string>();
+        [XmlAnyAttribute]
+        public Dictionary<string, string> Attributes { get; set; } = new Dictionary<string, string>();
+       
 
     }
 }

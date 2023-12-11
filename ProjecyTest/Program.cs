@@ -111,7 +111,6 @@ namespace ProjecyTest
                             xMLFileModel1.ElementValue = xmlNode.Value;
                         }
                         
-
                         xMLFileModels.Add(xMLFileModel1);
                     }
                     else
@@ -124,12 +123,7 @@ namespace ProjecyTest
 
                         foreach (XmlNode item in xmlDocument.DocumentElement)
                         {
-
-                         
-
                             FileParserService(item, xMLFileModel, xMLFileModels);
-
-
                         }
                         Console.WriteLine();
                     }
