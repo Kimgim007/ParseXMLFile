@@ -23,6 +23,7 @@ namespace ProjecyTest
         public string? ElementValue { get; set; }
         [XmlAnyAttribute]
         public Dictionary<string, string> Attributes { get; set; } = new Dictionary<string, string>();
+        public List<XMLFileModel>? Elements { get; set; } = new List<XMLFileModel>();
        
 
     }
