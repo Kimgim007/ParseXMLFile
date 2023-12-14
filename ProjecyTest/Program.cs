@@ -1,20 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System;
-using System.Xml;
-using System.Xml.Linq;
-using System.Collections.Generic;
-
-using System.Security.Cryptography.X509Certificates;
-using System.IO;
-using System.Xml.Serialization;
-using System.Data.SqlTypes;
+﻿using System.Xml;
 using System.Net;
-using System.Reflection;
-using System.Runtime.CompilerServices;
+using System.Text.Json;
+using RabbitMQ.Client;
+using System.Text;
 
 namespace ProjecyTest
 {
@@ -24,13 +12,13 @@ namespace ProjecyTest
         {
             Console.WriteLine("Укажите путь к папке где лежат XML файлы для последующей их обработки");
             string pathInFolder = Console.ReadLine();
-            //E:\Тестовое задание перезборка\Не брак
+            //E:\Не брак
             //E:\
             string[] xmlFiles = Directory.GetFiles(pathInFolder, "*.xml");
             XmlDocument xDoc = new XmlDocument();
 
             XMLFileModel model = new XMLFileModel();
-
+            string sda = "";
             foreach (string xmlFile in xmlFiles)
             {
                 string path = xmlFile;
@@ -46,15 +34,58 @@ namespace ProjecyTest
                 {
                     xmlNode = xDoc.FirstChild;
                 }
-
+                var options = new JsonSerializerOptions
+                {
+                    WriteIndented = true
+                };
                 if (xmlNode != null)
                 {
                     FileParserService(xmlNode, model);
-                    //Thread.Sleep(1000);
+
+                    sda = JsonSerializer.Serialize(model, options);
+
+                    Console.WriteLine();
+                    Console.WriteLine();
+
+                    Thread.Sleep(1000);
                     Console.WriteLine();
                     Console.WriteLine();
                 }
             }
+
+
+            // Чат ЖПТ
+            var factory = new ConnectionFactory
+            {
+                HostName = "localhost", // Имя или IP-адрес брокера
+                Port = 5672,             // Порт брокера по умолчанию
+                UserName = "guest",      // Имя пользователя брокера
+                Password = "guest"       // Пароль пользователя брокера
+            };
+
+            // Создание соединения
+            using (var connection = factory.CreateConnection())
+            using (var channel = connection.CreateModel())
+            {
+                // Объявление очереди
+                channel.QueueDeclare(queue: "your_queue_name",
+                                     durable: false,
+                                     exclusive: false,
+                                     autoDelete: false,
+                                     arguments: null);
+
+                // Конвертация JSON в байты
+                var body = Encoding.UTF8.GetBytes(sda);
+
+                // Отправка сообщения в очередь
+                channel.BasicPublish(exchange: "",
+                                     routingKey: "your_queue_name",
+                                     basicProperties: null,
+                                     body: body);
+
+                Console.WriteLine("Sent message to RabbitMQ");
+            }
+
         }
         public static void FileParserService(XmlNode xmlNode, XMLFileModel xMLFileModel)
         {

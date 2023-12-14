@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34322.80
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjecyTest", "ProjecyTest\ProjecyTest.csproj", "{4AC41B71-BF81-4E47-A9EE-95575B686C83}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjecyTest", "ProjecyTest\ProjecyTest.csproj", "{4AC41B71-BF81-4E47-A9EE-95575B686C83}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Microservices", "Microservices", "{23F64A79-0260-463E-8BA0-31DEB6B04041}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataProcessorService", "DataProcessorService\DataProcessorService.csproj", "{D727D3F8-1820-478E-BCB3-5ECE70C41DCC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,9 +19,17 @@ Global
 		{4AC41B71-BF81-4E47-A9EE-95575B686C83}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4AC41B71-BF81-4E47-A9EE-95575B686C83}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4AC41B71-BF81-4E47-A9EE-95575B686C83}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D727D3F8-1820-478E-BCB3-5ECE70C41DCC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D727D3F8-1820-478E-BCB3-5ECE70C41DCC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D727D3F8-1820-478E-BCB3-5ECE70C41DCC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D727D3F8-1820-478E-BCB3-5ECE70C41DCC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{4AC41B71-BF81-4E47-A9EE-95575B686C83} = {23F64A79-0260-463E-8BA0-31DEB6B04041}
+		{D727D3F8-1820-478E-BCB3-5ECE70C41DCC} = {23F64A79-0260-463E-8BA0-31DEB6B04041}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {89284070-C4D3-4730-9050-13346BB01EBF}

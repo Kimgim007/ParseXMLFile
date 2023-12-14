@@ -11,12 +11,6 @@ namespace ProjecyTest
     {
         public XMLFileModel() { }
 
-        public XMLFileModel(string ElementTagName, string ElementValue)
-        {
-            this.ElementTagName = ElementTagName;
-            this.ElementValue = ElementValue;
-        }
-
         [XmlElement]
         public string? ElementTagName { get; set; }
         [XmlText]
