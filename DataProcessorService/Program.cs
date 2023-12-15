@@ -1,51 +1,32 @@
-﻿using RabbitMQ.Client;
+﻿using System.Data.SQLite;
+using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System;
 using System.Text;
+using Microsoft.Data.Sqlite;
+using DataProcessorService.RabbitMQ;
 
 class Program
 {
     static void Main()
     {
-        // Создание фабрики соединения
-        var factory = new ConnectionFactory
-        {
-            HostName = "localhost", // Имя или IP-адрес брокера
-            Port = 5672,             // Порт брокера по умолчанию
-            UserName = "guest",      // Имя пользователя брокера
-            Password = "guest"       // Пароль пользователя брокера
-        };
+        //string databasePath = "DataBase.db";
+        //string absolutePath = Path.GetFullPath(databasePath);
+        //// Создание базы данных, если её нет
+        //if (!System.IO.File.Exists(absolutePath))
+        //{
+        //    SQLiteConnection.CreateFile(absolutePath);
+        //    Console.WriteLine($"База данных создана по пути: {absolutePath}");
+        //}
+        //else
+        //{
+        //    Console.WriteLine($"База данных уже существует по пути: {absolutePath}");
+        //}
 
-        // Создание соединения
-        using (var connection = factory.CreateConnection())
-        using (var channel = connection.CreateModel())
-        {
-            // Объявление очереди
-            channel.QueueDeclare(queue: "your_queue_name",
-                                 durable: false,
-                                 exclusive: false,
-                                 autoDelete: false,
-                                 arguments: null);
+        RabbitMQAcceptMassage.AcceptMessage();
 
-            // Создание подписчика
-            var consumer = new EventingBasicConsumer(channel);
-            consumer.Received += (model, ea) =>
-            {
-                var body = ea.Body.ToArray();
-                var message = Encoding.UTF8.GetString(body);
 
-                // Обработка полученного сообщения (ваш код)
-                Console.WriteLine("Received message: {0}", message);
-            };
 
-            // Начало прослушивания очереди
-            channel.BasicConsume(queue: "your_queue_name",
-                                 autoAck: true,
-                                 consumer: consumer);
-
-            Console.WriteLine("Waiting for messages. Press [Enter] to exit.");
-            Console.ReadLine();
-        }
     }
 }
 
