@@ -11,7 +11,8 @@ namespace DataProcessorService.Repository
     public class ModuleCatIDModuleStateRepository
     {
         private SQLiteDataBase _sQLiteDataBase { get; set; }
-        public ModuleCatIDModuleStateRepository() { }
+
+      
         public ModuleCatIDModuleStateRepository(SQLiteDataBase sQLiteDataBase)
         {
             this._sQLiteDataBase = sQLiteDataBase;
@@ -22,9 +23,9 @@ namespace DataProcessorService.Repository
             _sQLiteDataBase.Add(moduleCatIDModuleStateRepository);
             _sQLiteDataBase.SaveChanges();
         }
-        public bool Get(string moduleCategoryID)
+        public bool GetBoolAnswer(string moduleCategoryID)
         {
-            var moduleCategoryIDTrueOrFolse = _sQLiteDataBase.ModuleCategoreIDModeleStates.First(q => q.ModuleCategoreID == moduleCategoryID);
+            var moduleCategoryIDTrueOrFolse = _sQLiteDataBase.ModuleCategoreIDModeleStates.FirstOrDefault(q => q.ModuleCategoreID == moduleCategoryID);
             if (moduleCategoryIDTrueOrFolse != null)
             {
                 return true;

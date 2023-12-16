@@ -12,7 +12,8 @@ namespace DataProcessorService.MyDbContext
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite("Data Source=DataBase.db");
+            //Укажите свой путь подключения 
+            optionsBuilder.UseSqlite("Data Source=E:\\Тестовое задание перезборка\\DataProcessorService\\DataBase.db");
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

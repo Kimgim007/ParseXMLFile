@@ -18,36 +18,46 @@ namespace ProjecyTest
             
             string[] xmlFiles = Directory.GetFiles(pathInFolder, "*.xml");
 
-            XmlDocument xmlDoc = new XmlDocument();
-
-            XMLFileModel xMLFileModel = new XMLFileModel();
-
-            foreach (string xmlFile in xmlFiles)
+            if(xmlFiles != null)
             {
-                string path = xmlFile;
-                xmlDoc.Load(path);
+                Console.WriteLine($"Файлы загружены ");
+                XmlDocument xmlDoc = new XmlDocument();
 
-                XmlNode xmlNode;
+                XMLFileModel xMLFileModel = new XMLFileModel();
 
-                if (xmlDoc.FirstChild.NodeType == XmlNodeType.XmlDeclaration)
+                foreach (string xmlFile in xmlFiles)
                 {
-                    xmlNode = xmlDoc.LastChild;
-                }
-                else
-                {
-                    xmlNode = xmlDoc.FirstChild;
-                }
+                    string path = xmlFile;
+                    xmlDoc.Load(path);
 
-                if (xmlNode != null)
-                {
-                    FileParserService(xmlNode, xMLFileModel);
+                    XmlNode xmlNode;
 
-                    RabbitMQSendMessage.SendMessage(JsonSerialiaerClass.ClassToJsonString(xMLFileModel));
+                    if (xmlDoc.FirstChild.NodeType == XmlNodeType.XmlDeclaration)
+                    {
+                        xmlNode = xmlDoc.LastChild;
+                    }
+                    else
+                    {
+                        xmlNode = xmlDoc.FirstChild;
+                    }
 
-                    Thread.Sleep(1000);
-                    Console.WriteLine();
+                    if (xmlNode != null)
+                    {
+                        FileParserService(xmlNode, xMLFileModel);
+
+                        RabbitMQSendMessage.SendMessage(JsonSerialiaerClass.ClassToJsonString(xMLFileModel));
+
+                        Thread.Sleep(1000);
+                        Console.WriteLine();
+                    }
                 }
             }
+            else
+            {
+                Console.WriteLine($"Файлы не найдены  ");
+            }
+
+            
         }
         public static void FileParserService(XmlNode xmlNode, XMLFileModel xMLFileModel)
         {

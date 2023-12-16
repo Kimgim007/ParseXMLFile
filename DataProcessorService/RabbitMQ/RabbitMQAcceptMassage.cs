@@ -6,11 +6,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DataProcessorService.Service;
+using DataProcessorService.Repository;
+using DataProcessorService.MyDbContext;
 
 namespace DataProcessorService.RabbitMQ
 {
     public static class RabbitMQAcceptMassage
-    {     
+    {
+       
         public static void AcceptMessage()
         {
             // Создание фабрики соединения
@@ -40,7 +43,9 @@ namespace DataProcessorService.RabbitMQ
                     var body = ea.Body.ToArray();
                     var message = Encoding.UTF8.GetString(body);
 
-                    ModuleCategoryIDModuleStateService moduleCategoryIDModuleStateService = new ModuleCategoryIDModuleStateService();
+                    SQLiteDataBase _sQLiteDataBase = new SQLiteDataBase();
+                    ModuleCatIDModuleStateRepository _moduleCatIDModuleStateRepository = new ModuleCatIDModuleStateRepository(_sQLiteDataBase);
+                    ModuleCategoryIDModuleStateService moduleCategoryIDModuleStateService = new ModuleCategoryIDModuleStateService(_moduleCatIDModuleStateRepository);
                     moduleCategoryIDModuleStateService.StringProcessing(message);
 
                     // Обработка полученного сообщения (ваш код)
