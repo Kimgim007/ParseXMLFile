@@ -1,25 +1,37 @@
 ﻿using RabbitMQ.Client;
-using RabbitMQ.Client.Events;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
+using Newtonsoft.Json;
+using ProjecyTest.Entity;
 
-namespace ProjecyTest
+namespace ProjecyTest.RabbitMQ
 {
     public static class RabbitMQSendMessage
     {
+        public static RabbitMQConfigEntity LoadConfig()
+        {
+            string jsonFileConfig = File.ReadAllText("E:\\Тестовое задание перезборка\\ProjecyTest\\appsettings.json");
+            return JsonConvert.DeserializeObject<RabbitMQConfigEntity>(jsonFileConfig); ;
+      
+        }
         public static void SendMessage(string messeg)
         {
+            RabbitMQConfigEntity config = LoadConfig();
             var factory = new ConnectionFactory
             {
-                HostName = "localhost", // Имя или IP-адрес брокера
-                Port = 5672,             // Порт брокера по умолчанию
-                UserName = "guest",      // Имя пользователя брокера
-                Password = "guest"       // Пароль пользователя брокера
+                HostName = config.HostName,
+                Port = config.Port,
+                UserName = config.UserName,
+                Password = config.Password
             };
+
+            ////E:\Не брак
+            //var factory = new ConnectionFactory
+            //{
+            //    HostName = "localhost", // Имя или IP-адрес брокера
+            //    Port = 5672,             // Порт брокера по умолчанию
+            //    UserName = "guest",      // Имя пользователя брокера
+            //    Password = "guest"       // Пароль пользователя брокера
+            //};
 
             // Создание соединения
             using (var connection = factory.CreateConnection())
@@ -41,11 +53,11 @@ namespace ProjecyTest
                                                  basicProperties: null,
                                                  body: body);
 
-                Console.WriteLine("Sent message to RabbitMQ");
+                Console.WriteLine("Файл был отправлен через RabbitMQ");
             }
 
         }
     }
 
-    
+
 }

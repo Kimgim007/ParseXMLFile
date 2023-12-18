@@ -8,7 +8,7 @@ namespace DataProcessorService.MyDbContext
     public class SQLiteDataBase : DbContext
     {
         public SQLiteDataBase() { }
-        public DbSet<ModuleCategoreIDModeleState> ModuleCategoreIDModeleStates { get; set; }
+        public DbSet<ModuleCategoreIDModeleStateEntity> ModuleCategoreIDModeleStates { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -19,7 +19,7 @@ namespace DataProcessorService.MyDbContext
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<ModuleCategoreIDModeleState>(entityTypeBuilder =>
+            modelBuilder.Entity<ModuleCategoreIDModeleStateEntity>(entityTypeBuilder =>
             {
                 entityTypeBuilder.HasIndex(q => q.ModuleCategoreID).IsUnique();
             });

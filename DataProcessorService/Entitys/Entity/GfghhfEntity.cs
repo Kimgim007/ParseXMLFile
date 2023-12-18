@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace DataProcessorService.Entitys.Entity
 {
-    public class Gfghhf
+    public class GfghhfEntity
     {
-        public Gfghhf()
+        public GfghhfEntity()
         {
 
         }

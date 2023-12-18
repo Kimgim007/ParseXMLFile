@@ -6,12 +6,12 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace ProjecyTest
+namespace ProjecyTest.Entity
 {
-    public static class JsonSerialiaerClass
+    public static class JsonSerialiaerEntity
     {
-        public static string messageString {  get; set; }
-        public static string ClassToJsonString(XMLFileModel xMLFileModel)
+        public static string messageString { get; set; }
+        public static string ClassToJsonString(XMLFileModelEntity xMLFileModel)
         {
             var options = new JsonSerializerOptions
             {

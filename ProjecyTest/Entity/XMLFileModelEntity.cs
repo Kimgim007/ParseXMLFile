@@ -5,11 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
-namespace ProjecyTest
+namespace ProjecyTest.Entity
 {
-    public class XMLFileModel
+    public class XMLFileModelEntity
     {
-        public XMLFileModel() { }
+        public XMLFileModelEntity() { }
 
         [XmlElement]
         public string? ElementTagName { get; set; }
@@ -17,8 +17,8 @@ namespace ProjecyTest
         public string? ElementValue { get; set; }
         [XmlAnyAttribute]
         public Dictionary<string, string> Attributes { get; set; } = new Dictionary<string, string>();
-        public List<XMLFileModel>? Elements { get; set; } = new List<XMLFileModel>();
-       
+        public List<XMLFileModelEntity>? Elements { get; set; } = new List<XMLFileModelEntity>();
+
 
     }
 }

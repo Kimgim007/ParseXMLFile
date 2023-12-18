@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DataProcessorService.Entitys.EntityForDataBase
 {
-    public class ModuleCategoreIDModeleState
+    public class ModuleCategoreIDModeleStateEntity
     {
         [Key]
         public int ModuleCategoreIDModeleStateID { get; set; }

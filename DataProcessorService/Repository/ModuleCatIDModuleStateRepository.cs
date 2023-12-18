@@ -11,14 +11,11 @@ namespace DataProcessorService.Repository
     public class ModuleCatIDModuleStateRepository
     {
         private SQLiteDataBase _sQLiteDataBase { get; set; }
-
-      
         public ModuleCatIDModuleStateRepository(SQLiteDataBase sQLiteDataBase)
         {
             this._sQLiteDataBase = sQLiteDataBase;
         }
-
-        public void Add(ModuleCategoreIDModeleState moduleCatIDModuleStateRepository)
+        public void Add(ModuleCategoreIDModeleStateEntity moduleCatIDModuleStateRepository)
         {
             _sQLiteDataBase.Add(moduleCatIDModuleStateRepository);
             _sQLiteDataBase.SaveChanges();
@@ -36,7 +33,7 @@ namespace DataProcessorService.Repository
             }
 
         }
-        public void Update(ModuleCategoreIDModeleState moduleCategoreIDModeleState)
+        public void Update(ModuleCategoreIDModeleStateEntity moduleCategoreIDModeleState)
         {
             var modulCategoryIDModulState = _sQLiteDataBase.ModuleCategoreIDModeleStates.First(q => q.ModuleCategoreID == moduleCategoreIDModeleState.ModuleCategoreID);
             if (modulCategoryIDModulState != null)

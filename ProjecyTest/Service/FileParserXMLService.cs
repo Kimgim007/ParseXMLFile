@@ -5,61 +5,87 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
+using ProjecyTest.Entity;
+using ProjecyTest.RabbitMQ;
 
-namespace ProjecyTest
+namespace ProjecyTest.Service
 {
-    public static class FileParser
+    public static class FileParserXMLService
     {
         public static void FileParserService()
         {
-            Console.WriteLine("Укажите путь к папке где лежат XML файлы для последующей их обработки");
-            string pathInFolder = Console.ReadLine();
-            //E:\Не брак
-            
-            string[] xmlFiles = Directory.GetFiles(pathInFolder, "*.xml");
+            bool answer = true;
+            string[] xmlFiles = { };
 
-            if(xmlFiles != null)
+            while (answer)
             {
-                Console.WriteLine($"Файлы загружены ");
-                XmlDocument xmlDoc = new XmlDocument();
-
-                XMLFileModel xMLFileModel = new XMLFileModel();
-
-                foreach (string xmlFile in xmlFiles)
+                Console.WriteLine("Укажите путь к папке где лежат XML файлы для последующей их обработки");
+                string pathInFolder = pathInFolder = Console.ReadLine();
+                Console.Clear();
+                try
                 {
-                    string path = xmlFile;
-                    xmlDoc.Load(path);
+                    xmlFiles = Directory.GetFiles(pathInFolder, "*.xml");
+                    answer = false;
 
-                    XmlNode xmlNode;
+                }
+                catch
+                {
+                    Console.WriteLine("Неверно указан путь");
+                }
+            }
+            Console.Clear();
+            //E:\Не брак
 
-                    if (xmlDoc.FirstChild.NodeType == XmlNodeType.XmlDeclaration)
-                    {
-                        xmlNode = xmlDoc.LastChild;
-                    }
-                    else
-                    {
-                        xmlNode = xmlDoc.FirstChild;
-                    }
+            Console.WriteLine($"Файлы загружены успешно");
+            Console.WriteLine($"Начинается обработка файла");
+            XmlDocument xmlDoc = new XmlDocument();
 
-                    if (xmlNode != null)
+            XMLFileModelEntity xMLFileModel = new XMLFileModelEntity();
+
+            foreach (string xmlFile in xmlFiles)
+            {
+                string path = xmlFile;
+                xmlDoc.Load(path);
+
+                XmlNode xmlNode;
+
+                if (xmlDoc.FirstChild.NodeType == XmlNodeType.XmlDeclaration)
+                {
+                    xmlNode = xmlDoc.LastChild;
+                }
+                else
+                {
+                    xmlNode = xmlDoc.FirstChild;
+                }
+
+                if (xmlNode != null)
+                {
+                    try
                     {
                         FileParserService(xmlNode, xMLFileModel);
-
-                        RabbitMQSendMessage.SendMessage(JsonSerialiaerClass.ClassToJsonString(xMLFileModel));
 
                         Thread.Sleep(1000);
                         Console.WriteLine();
                     }
+                    catch
+                    {
+                        Console.WriteLine("Произошла ошибка!Файл не был обработан.");
+                        continue;
+                    }
+
+                    try
+                    {
+                        RabbitMQSendMessage.SendMessage(JsonSerialiaerEntity.ClassToJsonString(xMLFileModel));
+                    }
+                    catch
+                    {
+                        Console.WriteLine("Произошла ошибка, файл не был отправлен");
+                        continue;
+                    }
                 }
             }
-            else
-            {
-                Console.WriteLine($"Файлы не найдены  ");
-            }
-
-            
         }
-        public static void FileParserService(XmlNode xmlNode, XMLFileModel xMLFileModel)
+        public static void FileParserService(XmlNode xmlNode, XMLFileModelEntity xMLFileModel)
         {
             if (xmlNode.HasChildNodes)
             {
@@ -84,7 +110,7 @@ namespace ProjecyTest
                     {
                         for (int i = 0; i < xmlNode.ChildNodes.Count; i++)
                         {
-                            XMLFileModel xMLFile = new XMLFileModel();
+                            XMLFileModelEntity xMLFile = new XMLFileModelEntity();
                             if (xmlNode.ChildNodes.Count == 1 && xmlNode.InnerText[0] != '<')
                             {
                                 if (xmlNode.Name == "ModuleState")

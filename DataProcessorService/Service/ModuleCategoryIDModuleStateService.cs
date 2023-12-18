@@ -16,17 +16,13 @@ namespace DataProcessorService.Service
     public class ModuleCategoryIDModuleStateService
     {
         private ModuleCatIDModuleStateRepository _moduleCatIDModuleStateRepository;
-
-    
         public ModuleCategoryIDModuleStateService(ModuleCatIDModuleStateRepository moduleCatIDModuleStateRepository)
         {
             this._moduleCatIDModuleStateRepository = moduleCatIDModuleStateRepository;
-        }
-            
+        }           
         public void AddModuleGategoryIDModuleState(string ModuleCategoryId, string ModuleState)
-        {
-          
-            ModuleCategoreIDModeleState moduleCategoreIDModeleState = new ModuleCategoreIDModeleState();
+        {      
+            ModuleCategoreIDModeleStateEntity moduleCategoreIDModeleState = new ModuleCategoreIDModeleStateEntity();
 
             moduleCategoreIDModeleState.ModuleCategoreID = ModuleCategoryId;
             moduleCategoreIDModeleState.ModeleState = ModuleState;
@@ -41,7 +37,6 @@ namespace DataProcessorService.Service
             {
                 _moduleCatIDModuleStateRepository.Add(moduleCategoreIDModeleState);
             }
-
         }
 
         public void StringProcessing(string massage)
@@ -49,11 +44,11 @@ namespace DataProcessorService.Service
             //E:\Не брак
 
             Console.WriteLine(massage);
-            XMLFileModel xMLFileModel = JsonConvert.DeserializeObject<XMLFileModel>(massage);
+            XMLFileModelEntity xMLFileModel = JsonConvert.DeserializeObject<XMLFileModelEntity>(massage);
 
             if (xMLFileModel.Elements != null)
             {
-                List<XMLFileModel> listDiviceStatus = new List<XMLFileModel>();
+                List<XMLFileModelEntity> listDiviceStatus = new List<XMLFileModelEntity>();
                 listDiviceStatus = xMLFileModel.Elements.Where(q => q.ElementTagName == "DeviceStatus").ToList();
 
                 if (listDiviceStatus != null)
@@ -61,7 +56,7 @@ namespace DataProcessorService.Service
 
                     foreach (var item in listDiviceStatus)
                     {
-                        Gfghhf gfghhf = new Gfghhf();
+                        GfghhfEntity gfghhf = new GfghhfEntity();
                         GetModelIdModelStatus(item, gfghhf);
 
                         if (gfghhf.ModuleCategoryID != null && gfghhf.ModuleState != null)
@@ -73,7 +68,7 @@ namespace DataProcessorService.Service
             }
         }
 
-        public void GetModelIdModelStatus(XMLFileModel xMLFileModel, Gfghhf gfghhf)
+        public void GetModelIdModelStatus(XMLFileModelEntity xMLFileModel, GfghhfEntity gfghhf)
         {
             if (xMLFileModel.ElementTagName == "ModuleCategoryID")
             {

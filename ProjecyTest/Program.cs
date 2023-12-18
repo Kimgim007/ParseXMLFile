@@ -3,6 +3,7 @@ using System.Net;
 using System.Text.Json;
 using RabbitMQ.Client;
 using System.Text;
+using ProjecyTest.Service;
 
 namespace ProjecyTest
 {
@@ -10,7 +11,7 @@ namespace ProjecyTest
     {
         public static void Main()
         {
-            FileParser.FileParserService();          
+            FileParserXMLService.FileParserService();          
         }
     }
 }

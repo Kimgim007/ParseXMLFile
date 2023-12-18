@@ -8,21 +8,30 @@ using System.Threading.Tasks;
 using DataProcessorService.Service;
 using DataProcessorService.Repository;
 using DataProcessorService.MyDbContext;
-
+using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
+using DataProcessorService.Entitys.Entity;
 namespace DataProcessorService.RabbitMQ
 {
     public static class RabbitMQAcceptMassage
     {
-       
+        public static RabbitMQConfigEntity LoadConfig()
+        {
+            string jsonFileConfig = File.ReadAllText("E:\\Тестовое задание перезборка\\DataProcessorService\\appsettings.json");
+            return JsonConvert.DeserializeObject<RabbitMQConfigEntity>(jsonFileConfig); ;
+
+        }
         public static void AcceptMessage()
         {
+            //E:\Не брак
             // Создание фабрики соединения
+            RabbitMQConfigEntity config = LoadConfig();
             var factory = new ConnectionFactory
             {
-                HostName = "localhost", // Имя или IP-адрес брокера
-                Port = 5672,             // Порт брокера по умолчанию
-                UserName = "guest",      // Имя пользователя брокера
-                Password = "guest"       // Пароль пользователя брокера
+                HostName = config.HostName,
+                Port = config.Port,
+                UserName = config.UserName,
+                Password = config.Password
             };
 
             // Создание соединения
@@ -57,7 +66,7 @@ namespace DataProcessorService.RabbitMQ
                                      autoAck: true,
                                      consumer: consumer);
 
-                Console.WriteLine("Waiting for messages. Press [Enter] to exit.");
+                Console.WriteLine("Ожидание сообщения");
                 Console.ReadLine();
             }
         }
