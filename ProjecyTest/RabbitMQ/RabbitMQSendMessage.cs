@@ -2,6 +2,7 @@
 using System.Text;
 using Newtonsoft.Json;
 using ProjecyTest.Entity;
+using Serilog;
 
 namespace ProjecyTest.RabbitMQ
 {
@@ -9,6 +10,7 @@ namespace ProjecyTest.RabbitMQ
     {
         public static RabbitMQConfigEntity LoadConfig()
         {
+            // Местонахождение файла конфигурации
             string jsonFileConfig = File.ReadAllText("E:\\Тестовое задание перезборка\\ProjecyTest\\appsettings.json");
             return JsonConvert.DeserializeObject<RabbitMQConfigEntity>(jsonFileConfig); ;
       
@@ -23,16 +25,6 @@ namespace ProjecyTest.RabbitMQ
                 UserName = config.UserName,
                 Password = config.Password
             };
-
-            ////E:\Не брак
-            //var factory = new ConnectionFactory
-            //{
-            //    HostName = "localhost", // Имя или IP-адрес брокера
-            //    Port = 5672,             // Порт брокера по умолчанию
-            //    UserName = "guest",      // Имя пользователя брокера
-            //    Password = "guest"       // Пароль пользователя брокера
-            //};
-
             // Создание соединения
             using (var connection = factory.CreateConnection())
             using (var channel = connection.CreateModel())
@@ -52,12 +44,9 @@ namespace ProjecyTest.RabbitMQ
                                                  routingKey: "my_queue",
                                                  basicProperties: null,
                                                  body: body);
-
-                Console.WriteLine("Файл был отправлен через RabbitMQ");
+                Log.Information("Файл был отправлен через RabbitMQ");
+             
             }
-
         }
     }
-
-
 }

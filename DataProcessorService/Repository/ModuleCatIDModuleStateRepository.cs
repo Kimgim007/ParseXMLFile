@@ -31,7 +31,6 @@ namespace DataProcessorService.Repository
             {
                 return false;
             }
-
         }
         public void Update(ModuleCategoreIDModeleStateEntity moduleCategoreIDModeleState)
         {

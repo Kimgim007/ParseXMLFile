@@ -7,11 +7,14 @@ using System.Threading.Tasks;
 using System.Xml;
 using ProjecyTest.Entity;
 using ProjecyTest.RabbitMQ;
+using Serilog;
+using Serilog.Core;
 
 namespace ProjecyTest.Service
 {
     public static class FileParserXMLService
     {
+        // Этот метод для консольного интерфейса и использования многопоточности 
         public static void FileParserService()
         {
             bool answer = true;
@@ -19,31 +22,30 @@ namespace ProjecyTest.Service
 
             while (answer)
             {
-                Console.WriteLine("Укажите путь к папке где лежат XML файлы для последующей их обработки");
+                Log.Information("Укажите путь к папке где лежат XML файлы для последующей их обработки");
+               
                 string pathInFolder = pathInFolder = Console.ReadLine();
                 Console.Clear();
                 try
                 {
                     xmlFiles = Directory.GetFiles(pathInFolder, "*.xml");
                     answer = false;
-
                 }
-                catch
+                catch (Exception ex)
                 {
-                    Console.WriteLine("Неверно указан путь");
+                    Log.Error(ex, "Ошибка при указании пути к папке");
+                
                 }
             }
-            Console.Clear();
-            //E:\Не брак
+            Console.Clear();    
 
-            Console.WriteLine($"Файлы загружены успешно");
-            Console.WriteLine($"Начинается обработка файла");
-            XmlDocument xmlDoc = new XmlDocument();
-
-            XMLFileModelEntity xMLFileModel = new XMLFileModelEntity();
-
-            foreach (string xmlFile in xmlFiles)
+            Log.Information("Файлы загружены успешно");
+       
+            Parallel.ForEach(xmlFiles, xmlFile =>
             {
+                XmlDocument xmlDoc = new XmlDocument();
+                XMLFileModelEntity xMLFileModel = new XMLFileModelEntity();
+
                 string path = xmlFile;
                 xmlDoc.Load(path);
 
@@ -62,47 +64,45 @@ namespace ProjecyTest.Service
                 {
                     try
                     {
+                        Log.Information("Начинается обработка файла");
+                       
                         FileParserService(xmlNode, xMLFileModel);
 
                         Thread.Sleep(1000);
-                        Console.WriteLine();
                     }
-                    catch
+                    catch (Exception ex)
                     {
-                        Console.WriteLine("Произошла ошибка!Файл не был обработан.");
-                        continue;
+                       
+                        Log.Error(ex, $"Произошла ошибка! Файл {xmlFile} не был обработан.");
                     }
 
                     try
                     {
                         RabbitMQSendMessage.SendMessage(JsonSerialiaerEntity.ClassToJsonString(xMLFileModel));
                     }
-                    catch
+                    catch (Exception ex)
                     {
-                        Console.WriteLine("Произошла ошибка, файл не был отправлен");
-                        continue;
+                     
+                        Log.Error(ex, $"Произошла ошибка, файл {xmlFile} не был отправлен");
                     }
                 }
-            }
+            });
         }
+        // Основаня логика для обработки XML файла
         public static void FileParserService(XmlNode xmlNode, XMLFileModelEntity xMLFileModel)
         {
             if (xmlNode.HasChildNodes)
             {
                 if (xmlNode.NodeType == XmlNodeType.Element)
-                {
-                    Console.WriteLine();
-                    Console.WriteLine($"Имя узла {xmlNode.Name}");
-
+                {         
                     xMLFileModel.ElementTagName = xmlNode.Name;
 
                     if (xmlNode.Attributes.Count != 0)
                     {
-                        Console.WriteLine("Атребуты узла:");
+                     
                         foreach (XmlAttribute attr in xmlNode.Attributes)
                         {
                             xMLFileModel.Attributes.Add(attr.Name, attr.Value);
-                            Console.WriteLine($"Имя атребута: {attr.Name} - значение: {attr.Value}");
                         }
                     }
 
@@ -127,7 +127,7 @@ namespace ProjecyTest.Service
 
                             if (xmlNode.ChildNodes.Count == 1 && xmlNode.ChildNodes[0].NodeType == XmlNodeType.Text && xmlNode.InnerText[0] != '<')
                             {
-                                FileParserService(xmlNode.ChildNodes[i]);
+
                             }
                             else
                             {
@@ -152,39 +152,12 @@ namespace ProjecyTest.Service
                     if (xmlDocument.FirstChild.NodeType == XmlNodeType.XmlDeclaration)
                     {
                         xmlNode = xmlDocument.LastChild;
-
                     }
                     else
                     {
                         xmlNode = xmlDocument.FirstChild;
                     }
                     FileParserService(xmlNode, xMLFileModel);
-                }
-                Console.WriteLine();
-            }
-        }
-        public static void FileParserService(XmlNode xmlNode)
-        {
-            if (xmlNode.NodeType == XmlNodeType.Text)
-            {
-                if (xmlNode.InnerText.Length > 0)
-                {
-                    if (xmlNode.InnerText[0] != '<')
-                    {
-                        if (xmlNode.ParentNode.Name == "ModuleState")
-                        {
-                            string[] onlineRunNotReadyOffline = new[] { "Online", "Run", "NotReady", "Offline" };
-                            Random rnd = new Random();
-                            //Console.WriteLine($"Текстовое значение узла: {onlineRunNotReadyOffline[rnd.Next(onlineRunNotReadyOffline.Length)]}");
-                            Console.WriteLine($"Текстовое значение узла:{xmlNode.InnerText}");
-                        }
-                        else
-                        {
-                            Console.WriteLine($"Текстовое значение узла:{xmlNode.InnerText}");
-                        }
-
-                    }
-                    Console.WriteLine();
                 }
             }
         }

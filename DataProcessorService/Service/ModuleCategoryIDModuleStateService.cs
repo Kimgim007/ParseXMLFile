@@ -41,8 +41,6 @@ namespace DataProcessorService.Service
 
         public void StringProcessing(string massage)
         {
-            //E:\Не брак
-
             Console.WriteLine(massage);
             XMLFileModelEntity xMLFileModel = JsonConvert.DeserializeObject<XMLFileModelEntity>(massage);
 
@@ -56,7 +54,7 @@ namespace DataProcessorService.Service
 
                     foreach (var item in listDiviceStatus)
                     {
-                        GfghhfEntity gfghhf = new GfghhfEntity();
+                        IntermediateEntity gfghhf = new IntermediateEntity();
                         GetModelIdModelStatus(item, gfghhf);
 
                         if (gfghhf.ModuleCategoryID != null && gfghhf.ModuleState != null)
@@ -68,22 +66,22 @@ namespace DataProcessorService.Service
             }
         }
 
-        public void GetModelIdModelStatus(XMLFileModelEntity xMLFileModel, GfghhfEntity gfghhf)
+        public void GetModelIdModelStatus(XMLFileModelEntity xMLFileModel, IntermediateEntity intermediateEntity)
         {
             if (xMLFileModel.ElementTagName == "ModuleCategoryID")
             {
-                gfghhf.ModuleCategoryID = xMLFileModel.ElementValue;
+                intermediateEntity.ModuleCategoryID = xMLFileModel.ElementValue;
             }
             if (xMLFileModel.ElementTagName == "ModuleState")
             {
-                gfghhf.ModuleState = xMLFileModel.ElementValue;
+                intermediateEntity.ModuleState = xMLFileModel.ElementValue;
             }
 
             if (xMLFileModel.Elements != null)
             {
                 foreach (var item in xMLFileModel.Elements)
                 {
-                    GetModelIdModelStatus(item, gfghhf);
+                    GetModelIdModelStatus(item, intermediateEntity);
                 }
             }
         }
