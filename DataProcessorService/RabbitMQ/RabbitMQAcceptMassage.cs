@@ -17,13 +17,14 @@ namespace DataProcessorService.RabbitMQ
     {
         public static RabbitMQConfigEntity LoadConfig()
         {
-            string jsonFileConfig = File.ReadAllText("E:\\Тестовое задание перезборка\\DataProcessorService\\appsettings.json");
+            //Пример соединения:
+            //string jsonFileConfig = File.ReadAllText("E:\\Тестовое задание\\DataProcessorService\\appsettings.json");
+            string jsonFileConfig = File.ReadAllText("YouPath\\DataProcessorService\\appsettings.json");
             return JsonConvert.DeserializeObject<RabbitMQConfigEntity>(jsonFileConfig); ;
 
         }
         public static void AcceptMessage()
         {
-            //E:\Не брак
             // Создание фабрики соединения
             RabbitMQConfigEntity config = LoadConfig();
             var factory = new ConnectionFactory
@@ -56,9 +57,6 @@ namespace DataProcessorService.RabbitMQ
                     ModuleCatIDModuleStateRepository _moduleCatIDModuleStateRepository = new ModuleCatIDModuleStateRepository(_sQLiteDataBase);
                     ModuleCategoryIDModuleStateService moduleCategoryIDModuleStateService = new ModuleCategoryIDModuleStateService(_moduleCatIDModuleStateRepository);
                     moduleCategoryIDModuleStateService.StringProcessing(message);
-
-                    // Обработка полученного сообщения (ваш код)
-                    //Console.WriteLine("Received message: {0}", message);
                 };
 
                 // Начало прослушивания очереди
