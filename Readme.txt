@@ -14,4 +14,6 @@
 
 5.После этого перейдите в проект DataProcessorService, затем в папку MyDbContext. В классе SQLiteDataBase, в методе OnConfiguring, измените путь (YourPath) к базе данных SQLite, которая уже находится в проекте.
 
-6.Запустите проект.
+6.Теперь необходимо открыть свойства решения (Solution Properties) => Общие свойства (Common Properties) => Запуск (Startup Project) => выбрать "Несколько проектов для запуска" (Multiple startup projects) и установить параметр "Запуск" (Action) для обоих проектов на "Запуск" (Start).
+
+7.Запустите проект.
