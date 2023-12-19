@@ -1,3 +1,5 @@
+По ссылке находится само задание с XML файлом: https://t.ly/OcA8i
+
 Исходный код проекта доступен по ссылке: https://github.com/Kimgim007/ProjecyTest
 
 Внутри решения два проекта: ProjecyTest и DataProcessorService.
