@@ -14,7 +14,7 @@ namespace ProjecyTest.Service
 {
     public static class FileParserXMLService
     {
-        // Этот метод для консольного интерфейса и использования многопоточности 
+        // Этот метод для консольного интерфейса c использованием многопоточности 
         public static void FileParserService()
         {
             bool answer = true;
