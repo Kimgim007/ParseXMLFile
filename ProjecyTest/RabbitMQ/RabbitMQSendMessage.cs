@@ -11,7 +11,7 @@ namespace ProjecyTest.RabbitMQ
         public static RabbitMQConfigEntity LoadConfig()
         {
             // Местонахождение файла конфигурации
-            //Пример соединения :
+            //Пример соединения:
             //  string jsonFileConfig = File.ReadAllText("E:\\Тестовое задание \\ProjecyTest\\appsettings.json");
             string jsonFileConfig = File.ReadAllText("YouPath\\ProjecyTest\\appsettings.json");
             return JsonConvert.DeserializeObject<RabbitMQConfigEntity>(jsonFileConfig); ;
